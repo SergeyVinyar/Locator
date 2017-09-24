@@ -8,6 +8,7 @@ import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.net.NetRepository;
 import ru.vinyarsky.locator.presenter.AddAddressFragmentPresenter;
 import ru.vinyarsky.locator.presenter.AddressListFragmentPresenter;
+import ru.vinyarsky.locator.presenter.AddressesOnMapFragmentPresenter;
 
 @Module
 public final class UiModule {
@@ -32,5 +33,13 @@ public final class UiModule {
         if (!(fragment instanceof AddAddressFragmentPresenter.AddAddressFragmentView))
             throw new IllegalArgumentException(String.format("Fragment '%s' must implement AddAddressFragmentPresenter.AddAddressFragmentView", fragment.getClass().getSimpleName()));
         return new AddAddressFragmentPresenter(dbRepository, netRepository, (AddAddressFragmentPresenter.AddAddressFragmentView) fragment);
+    }
+
+    @Provides
+    @UiScope
+    public AddressesOnMapFragmentPresenter getAddressesOnMapFragmentPresenter(DbRepository dbRepository, NetRepository netRepository) {
+        if (!(fragment instanceof AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView))
+            throw new IllegalArgumentException(String.format("Fragment '%s' must implement AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView", fragment.getClass().getSimpleName()));
+        return new AddressesOnMapFragmentPresenter(dbRepository, netRepository, (AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView) fragment);
     }
 }

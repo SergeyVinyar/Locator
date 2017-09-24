@@ -35,7 +35,7 @@ final public class AddressListFragmentPresenter extends Presenter {
         if (savedInstanceState != null) {
             ArrayList<String> data = savedInstanceState.getStringArrayList(BUNDLE_DATA);
             if (data != null)
-                addressList = savedInstanceState.getStringArrayList(BUNDLE_DATA);
+                addressList = data;
             else
                 addressList.clear();
         }

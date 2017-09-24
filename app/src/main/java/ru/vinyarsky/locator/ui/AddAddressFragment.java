@@ -32,7 +32,7 @@ public final class AddAddressFragment extends Fragment implements AddAddressFrag
 
     private final AddAddressFragmentPresenter presenter;
 
-    private AddAddressFragmentListener listener;
+    private Listener listener;
 
     @BindView(R.id.add_address_fragment_search_text)
     EditText searchText;
@@ -54,9 +54,9 @@ public final class AddAddressFragment extends Fragment implements AddAddressFrag
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
-        if (!(activity instanceof AddAddressFragmentListener))
-            throw new IllegalArgumentException("Activity must implement AddAddressFragmentListener");
-        listener = (AddAddressFragmentListener) activity;
+        if (!(activity instanceof Listener))
+            throw new IllegalArgumentException("Activity must implement AddAddressFragment.Listener");
+        listener = (Listener) activity;
         presenter.onCreate(savedInstanceState);
     }
 
@@ -173,7 +173,7 @@ public final class AddAddressFragment extends Fragment implements AddAddressFrag
         }
     }
 
-    public interface AddAddressFragmentListener {
+    public interface Listener {
         void showAddressListFragment();
 
         void showProgress();

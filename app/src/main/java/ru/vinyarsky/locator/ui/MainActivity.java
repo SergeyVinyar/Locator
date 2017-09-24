@@ -15,14 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.util.function.Supplier;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vinyarsky.ui.R;
 
 public class MainActivity extends AppCompatActivity
         implements
-            AddressListFragment.AddressListFragmentListener,
-            AddAddressFragment.AddAddressFragmentListener,
+            AddressListFragment.Listener,
+            AddAddressFragment.Listener,
+            AddressesOnMapFragment.Listener,
             NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.activity_main)
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.menuitem_drawer_distance:
                 break;
             case R.id.menuitem_drawer_map:
+                showAddressesOnMapFragment();
                 break;
             default:
                 return false;
@@ -100,26 +104,37 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * Returns id of a backstack entry for a fragment with particular tag.
-     * -1 if not found.
-     */
-    private int getBackstackEntryIdForFragmentTag(String tag) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        for (int id = 0; id < fragmentManager.getBackStackEntryCount(); id++)
-            if (tag.equals(fragmentManager.getBackStackEntryAt(id).getName()))
-                return id;
-        return -1;
+    @Override
+    public void showAddressListFragment() {
+        showSingleTopFragment(AddressListFragment.class, AddressListFragment::newInstance);
     }
 
     @Override
-    public void showAddressListFragment() {
-        String fragmentTag = AddressListFragment.class.getName();
+    public void showAddAddressFragment() {
+        Fragment newFragment = AddAddressFragment.newInstance();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.framelayout_layout_main_appbar_fragment, newFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
+
+    public void showAddressesOnMapFragment() {
+        showSingleTopFragment(AddressesOnMapFragment.class, AddressesOnMapFragment::newInstance);
+    }
+
+    /**
+     * Shows new fragment. If it's already existed show the existed instance.
+     */
+    private void showSingleTopFragment(Class fragmentClass, Supplier<Fragment> supplyFragment) {
+        String fragmentTag = fragmentClass.getName();
 
         int fragmentId = getBackstackEntryIdForFragmentTag(fragmentTag);
         if (fragmentId == -1) {
             Fragment oldFragment = getSupportFragmentManager().findFragmentById(R.id.framelayout_layout_main_appbar_fragment);
-            Fragment newFragment = AddressListFragment.newInstance();
+            Fragment newFragment = supplyFragment.get();
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -138,16 +153,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void showAddAddressFragment() {
-        Fragment newFragment = AddAddressFragment.newInstance();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.framelayout_layout_main_appbar_fragment, newFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+    /**
+     * Returns id of a backstack entry for a fragment with particular tag.
+     * -1 if not found.
+     */
+    private int getBackstackEntryIdForFragmentTag(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        for (int id = 0; id < fragmentManager.getBackStackEntryCount(); id++)
+            if (tag.equals(fragmentManager.getBackStackEntryAt(id).getName()))
+                return id;
+        return -1;
     }
 
     @Override

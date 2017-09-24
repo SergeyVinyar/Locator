@@ -27,7 +27,7 @@ public final class DbRepository {
         this.db = db;
         this.addressList = db.createQuery(ADDRESSES_TABLE, String.format("SELECT ROWID as %s, * FROM %s", ADDRESSES_ID, ADDRESSES_TABLE))
                     .flatMap(query -> {
-                        ArrayList<DbAddress> list = new ArrayList<DbAddress>();
+                        ArrayList<DbAddress> list = new ArrayList<>();
                         Cursor cursor = query.run();
                         if (cursor != null) {
                             try {

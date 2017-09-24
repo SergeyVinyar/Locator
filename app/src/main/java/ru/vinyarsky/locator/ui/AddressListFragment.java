@@ -35,7 +35,7 @@ public final class AddressListFragment extends Fragment implements AddressListFr
 
     private final AddressListFragmentPresenter presenter;
 
-    private AddressListFragmentListener listener;
+    private Listener listener;
 
     public AddressListFragment() {
         presenter = LocatorApplication
@@ -49,9 +49,9 @@ public final class AddressListFragment extends Fragment implements AddressListFr
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
-        if (!(activity instanceof AddressListFragmentListener))
-            throw new IllegalArgumentException("Activity must implement AddressListFragmentListener");
-        listener = (AddressListFragmentListener) activity;
+        if (!(activity instanceof Listener))
+            throw new IllegalArgumentException("Activity must implement AddressListFragment.Listener");
+        listener = (Listener) activity;
         presenter.onCreate(savedInstanceState);
     }
 
@@ -148,7 +148,7 @@ public final class AddressListFragment extends Fragment implements AddressListFr
         }
     }
 
-    public interface AddressListFragmentListener {
+    public interface Listener {
         void showAddAddressFragment();
 
         void showProgress();
