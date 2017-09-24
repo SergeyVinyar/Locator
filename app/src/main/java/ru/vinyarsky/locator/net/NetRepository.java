@@ -19,9 +19,12 @@ public final class NetRepository {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(SputnikApi.class);
-// TODO First 10 items only
-    public Observable<ArrayList<NetAddress>> getAddressList(String placeName) {
-        return api.searchFor(placeName)
+
+    /**
+     * @param limit Max number of points
+     */
+    public Observable<ArrayList<NetAddress>> getAddressList(String placeName, int limit) {
+        return api.searchFor(placeName, limit)
                 .map(data -> {
                     ArrayList<NetAddress> result = new ArrayList<NetAddress>();
                     if (data != null && data.getResult() != null && data.getResult().getAddress() != null) {
@@ -51,6 +54,6 @@ public final class NetRepository {
     interface SputnikApi {
 
         @GET("/search/addr")
-        Observable<SputnikContract> searchFor(@Query("q") String placeName);
+        Observable<SputnikContract> searchFor(@Query("q") String placeName, @Query("addr_limit") int limit);
     }
 }

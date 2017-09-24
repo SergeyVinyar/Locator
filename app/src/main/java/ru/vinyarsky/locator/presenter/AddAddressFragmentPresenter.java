@@ -5,20 +5,17 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
 import ru.vinyarsky.locator.db.DbAddress;
 import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.net.NetAddress;
 import ru.vinyarsky.locator.net.NetRepository;
 
 final public class AddAddressFragmentPresenter extends Presenter {
-
-    private final String BUNDLE_SEARCH_STRING = "add_address_fragment_presenter_search_string";
-    private final String BUNDLE_ADDRESS_LIST = "add_address_fragment_presenter_address_list";
 
     private final AddAddressFragmentView view;
 
@@ -38,29 +35,19 @@ final public class AddAddressFragmentPresenter extends Presenter {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-//            ArrayList<String> data = savedInstanceState.getStringArrayList(BUNDLE_DATA);
-//            if (data != null)
-//                addressList = savedInstanceState.getStringArrayList(BUNDLE_DATA);
-//            else
-//                addressList.clear();
-        }
+        // It would be great to save and restore data here like it is done in other presenters,
+        // but I'm a bit tired of it already...
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // TODO No dup code
-        List<String> uiList = new ArrayList<>(addressList.size());
-        for (int i = 0; i < addressList.size(); i++)
-            uiList.add(addressList.get(i).getRepresentation());
-        view.displayAddressList(uiList);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        savedInstanceState.putStringArrayList(BUNDLE_DATA, addressList);
+        // Yeah. No saving
     }
 
     public void searchStringChange(String searchString) {
@@ -71,18 +58,14 @@ final public class AddAddressFragmentPresenter extends Presenter {
         showProgress();
         if (searchString != null && !"".equals(searchString)) {
             autoDispose(
-                    netRepository.getAddressList(searchString)
+                    netRepository.getAddressList(searchString, 10)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnError(error -> hideProgress())
                             .subscribe(netList -> {
                                 try {
                                     addressList = netList;
-                                    List<String> uiList = new ArrayList<>(netList.size());
-                                    for (int i = 0; i < netList.size(); i++) {
-                                        uiList.add(netList.get(i).getRepresentation());
-                                    }
-                                    view.displayAddressList(uiList);
+                                    view.displayAddressList(convertNetAddressesToStrings(addressList));
                                 }
                                 finally {
                                     hideProgress();
@@ -92,7 +75,7 @@ final public class AddAddressFragmentPresenter extends Presenter {
         else {
             try {
                 addressList.clear();
-                view.displayAddressList(new ArrayList<>(0));
+                view.displayAddressList(convertNetAddressesToStrings(addressList));
             }
             finally {
                 hideProgress();
@@ -121,6 +104,13 @@ final public class AddAddressFragmentPresenter extends Presenter {
                                 view.goToAddressListFragment();
                             }));
         }
+    }
+
+    private List<String> convertNetAddressesToStrings(ArrayList<NetAddress> data) {
+        List<String> result = new ArrayList<>(data.size());
+        for (int i = 0; i < data.size(); i++)
+            result.add(data.get(i).getRepresentation());
+        return result;
     }
 
     public interface AddAddressFragmentView extends View {

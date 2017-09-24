@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.squareup.sqlbrite2.BriteDatabase;
@@ -13,7 +15,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+
 import io.reactivex.schedulers.Schedulers;
+
 import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.location.LocationRepository;
 import ru.vinyarsky.locator.net.NetRepository;

@@ -16,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import ru.vinyarsky.locator.LocatorApplication;
 import ru.vinyarsky.locator.presenter.DistanceListFragmentPresenter;
 import ru.vinyarsky.ui.R;
@@ -28,6 +29,9 @@ public final class DistanceListFragment extends Fragment implements DistanceList
 
     @BindView(R.id.distance_list_fragment_list)
     RecyclerView recyclerView;
+
+    @BindView(R.id.distance_list_fragment_no_data_label)
+    TextView noDataLabel;
 
     private final DistanceListFragmentPresenter presenter;
 
@@ -95,6 +99,10 @@ public final class DistanceListFragment extends Fragment implements DistanceList
     @Override
     public void displayList(List<DistanceListFragmentPresenter.DistanceItem> data) {
         ((DistanceListAdapter) recyclerView.getAdapter()).swapDistanceList(data);
+        if (data.size() == 0)
+            noDataLabel.setVisibility(View.VISIBLE);
+        else
+            noDataLabel.setVisibility(View.GONE);
     }
 
     private static class DistanceListAdapter extends RecyclerView.Adapter {

@@ -7,14 +7,12 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
 import ru.vinyarsky.locator.db.DbAddress;
 import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.location.LocationRepository;
@@ -51,30 +49,33 @@ public final class DistanceListFragmentPresenter extends Presenter {
             else
                 distanceList.clear();
         }
-        else {
-            autoDispose(
-                    Observable.combineLatest(dbRepository.addressList, locationRepository.lastLocation, (dbAddressList, location) -> {
-                                ArrayList<DistanceItem> result = new ArrayList<>(dbAddressList.size());
-                                for (int i = 0; i < dbAddressList.size(); i++) {
-                                    DbAddress dbAddress = dbAddressList.get(i);
-                                    Location addressLocation = new Location("");
-                                    addressLocation.setLatitude(dbAddress.getLatitude());
-                                    addressLocation.setLongitude(dbAddress.getLongitude());
-                                    int distance = 0;
-                                    if (location != null) // No Google play services or no permissions or no last location
-                                        distance = (int) location.distanceTo(addressLocation) / 1000;
-                                    result.add(new DistanceItem(dbAddress.getRepresentation(), distance));
-                                }
-                                return result;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        view.displayList(distanceList);
+        autoDispose(
+                Observable.combineLatest(dbRepository.addressList, locationRepository.lastLocation, (dbAddressList, location) -> {
+                            ArrayList<DistanceItem> result = new ArrayList<>(dbAddressList.size());
+                            for (int i = 0; i < dbAddressList.size(); i++) {
+                                DbAddress dbAddress = dbAddressList.get(i);
+                                Location addressLocation = new Location("");
+                                addressLocation.setLatitude(dbAddress.getLatitude());
+                                addressLocation.setLongitude(dbAddress.getLongitude());
+                                int distance = 0;
+                                if (location != null) // No Google play services or no permissions or no last location
+                                    distance = (int) location.distanceTo(addressLocation) / 1000;
+                                result.add(new DistanceItem(dbAddress.getRepresentation(), distance));
                             }
-                    )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(distanceItems -> {
-                        if (isRunning())
-                            view.displayList(distanceItems);
-                    }));
-        }
+                            return result;
+                        }
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(distanceItems -> {
+                    view.displayList(distanceItems);
+                }));
     }
 
     @Override

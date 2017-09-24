@@ -3,6 +3,7 @@ package ru.vinyarsky.locator;
 import javax.inject.Singleton;
 
 import dagger.Component;
+
 import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.location.LocationRepository;
 import ru.vinyarsky.locator.net.NetRepository;

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import ru.vinyarsky.locator.db.DbAddress;
 import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.net.NetRepository;
@@ -44,25 +45,28 @@ public final class AddressesOnMapFragmentPresenter extends Presenter {
             else
                 markersList.clear();
         }
-        else {
-            autoDispose(
-                    dbRepository.addressList
-                            // .subscribeOn(Schedulers.io()) has no effect (see BriteDatabase.createQuery docs)
-                            .map(addressList -> {
-                                ArrayList<AddressMarker> result = new ArrayList<>(addressList.size());
-                                for (int i = 0; i < addressList.size(); i++) {
-                                    DbAddress address = addressList.get(i);
-                                    result.add(new AddressMarker(address.getRepresentation(), address.getLatitude(), address.getLongitude()));
-                                }
-                                return result;
-                            })
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(addressList -> {
-                                this.markersList = addressList;
-                                if (isRunning() && isMapReady)
-                                    view.displayMarkers(markersList);
-                            }));
-        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        autoDispose(
+                dbRepository.addressList
+                        // .subscribeOn(Schedulers.io()) has no effect (see BriteDatabase.createQuery docs)
+                        .map(addressList -> {
+                            ArrayList<AddressMarker> result = new ArrayList<>(addressList.size());
+                            for (int i = 0; i < addressList.size(); i++) {
+                                DbAddress address = addressList.get(i);
+                                result.add(new AddressMarker(address.getRepresentation(), address.getLatitude(), address.getLongitude()));
+                            }
+                            return result;
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(addressList -> {
+                            this.markersList = addressList;
+                            if (isMapReady)
+                                view.displayMarkers(markersList);
+                        }));
     }
 
     @Override

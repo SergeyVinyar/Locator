@@ -3,14 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/layout_main_navheader_header_height"
     android:orientation="vertical"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark" >
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingTop="@dimen/layout_main_navheader_vertical_spacing"
         android:text="@string/app_description"
+        android:gravity="start|bottom"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="@color/colorPrimaryDark"
+        android:padding="4dp" />
 
 </LinearLayout>

@@ -6,5 +6,7 @@
     <TextView
         android:id="@+id/add_address_fragment_list_item_representation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="4dp" />
 </LinearLayout>

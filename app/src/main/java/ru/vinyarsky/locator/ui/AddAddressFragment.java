@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import ru.vinyarsky.locator.LocatorApplication;
 import ru.vinyarsky.locator.presenter.AddAddressFragmentPresenter;
 import ru.vinyarsky.ui.R;
@@ -153,7 +154,7 @@ public final class AddAddressFragment extends Fragment implements AddAddressFrag
 
         @Override
         public int getItemCount() {
-            return addressList != null ? addressList.size() : 10;
+            return addressList != null ? addressList.size() : 0;
         }
 
         public void swapAddressList(List<String> addressList) {

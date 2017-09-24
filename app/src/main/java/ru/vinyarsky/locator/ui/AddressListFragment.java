@@ -17,6 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import ru.vinyarsky.locator.LocatorApplication;
 import ru.vinyarsky.locator.presenter.AddressListFragmentPresenter;
 import ru.vinyarsky.ui.R;
@@ -33,8 +34,10 @@ public final class AddressListFragment extends Fragment implements AddressListFr
     @BindView(R.id.address_list_fragment_fab)
     FloatingActionButton fabView;
 
+    @BindView(R.id.address_list_fragment_no_data_label)
+    TextView noDataLabel;
+
     private final AddressListFragmentPresenter presenter;
-// TODO Write Empty if empty
     private Listener listener;
 
     public AddressListFragment() {
@@ -101,6 +104,10 @@ public final class AddressListFragment extends Fragment implements AddressListFr
     @Override
     public void displayAddressList(List<String> data) {
         ((AddressAdapter) recyclerView.getAdapter()).swapAddressList(data);
+        if (data.size() == 0)
+            noDataLabel.setVisibility(View.VISIBLE);
+        else
+            noDataLabel.setVisibility(View.GONE);
     }
 
     @Override

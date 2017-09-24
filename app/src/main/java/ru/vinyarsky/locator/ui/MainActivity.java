@@ -21,8 +21,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import ru.vinyarsky.ui.R;
 
 public class MainActivity extends AppCompatActivity
@@ -137,6 +141,8 @@ public class MainActivity extends AppCompatActivity
     public void showDistanceListFragment() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, ACCESS_COARSE_LOCATION_REQUEST_PERMISSION_ID);
+        else if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
+            Toast.makeText(this, R.string.no_play_services, Toast.LENGTH_LONG).show();
         else
             showSingleTopFragment(DistanceListFragment.class, DistanceListFragment::newInstance);
     }
@@ -146,11 +152,12 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case ACCESS_COARSE_LOCATION_REQUEST_PERMISSION_ID: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Ok, do it again
-                    showDistanceListFragment();
+                    // We'd better avoid immediate showing our fragment, because this event might be raised
+                    // before returning to MainActivity from the system permission dialog.
+                    // showDistanceListFragment();
                 } else {
                     // Oops
-                    Toast.makeText(this, "No permission - no distance. Sorry, bro.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.no_location_permission, Toast.LENGTH_LONG).show();
                 }
                 return;
             }

@@ -10,4 +10,11 @@
     <string name="menuitem_map">Map</string>
 
     <string name="button_search">Search</string>
+
+    <string name="kilometers">km</string>
+
+    <string name="no_data">No data</string>
+
+    <string name="no_location_permission">No permission - no distances. Sorry, bro</string>
+    <string name="no_play_services">Google play services aren\'t installed</string>
 </resources>

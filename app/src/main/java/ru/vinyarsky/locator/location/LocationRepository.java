@@ -1,16 +1,15 @@
 package ru.vinyarsky.locator.location;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.Task;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+
+// For the sake of simplicity I ommited subscribing to update location events.
+// Let's hope we have some "last location" on a device.
 
 public final class LocationRepository {
 

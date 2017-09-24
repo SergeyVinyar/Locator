@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import ru.vinyarsky.locator.db.DbRepository;
 import ru.vinyarsky.locator.net.NetRepository;
 
@@ -39,30 +40,27 @@ final public class AddressListFragmentPresenter extends Presenter {
             else
                 addressList.clear();
         }
-        else {
-            autoDispose(
-                    dbRepository.addressList
-                            // .subscribeOn(Schedulers.io()) has no effect (see BriteDatabase.createQuery docs)
-                            .map(addressList -> {
-                                ArrayList<String> result = new ArrayList<>(addressList.size());
-                                for (int i = 0; i < addressList.size(); i++)
-                                    result.add(addressList.get(i).getRepresentation());
-                                return result;
-                            })
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnError(error -> hideProgress())
-                            .subscribe(addressList -> {
-                                this.addressList = addressList;
-                                if (isRunning())
-                                    view.displayAddressList(addressList);
-                            }));
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
         view.displayAddressList(addressList);
+        autoDispose(
+                dbRepository.addressList
+                        // .subscribeOn(Schedulers.io()) has no effect (see BriteDatabase.createQuery docs)
+                        .map(addressList -> {
+                            ArrayList<String> result = new ArrayList<>(addressList.size());
+                            for (int i = 0; i < addressList.size(); i++)
+                                result.add(addressList.get(i).getRepresentation());
+                            return result;
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnError(error -> hideProgress())
+                        .subscribe(addressList -> {
+                            this.addressList = addressList;
+                            view.displayAddressList(addressList);
+                        }));
     }
 
     @Override
