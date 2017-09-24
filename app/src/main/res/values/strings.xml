@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Locator</string>
+    <string name="app_description">My awesome locator</string>
+
+    <string name="main_navigation_drawer_open">Open navigation drawer</string>
+    <string name="main_navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="menuitem_search">Search</string>
+    <string name="menuitem_distance">Distance</string>
+    <string name="menuitem_map">Map</string>
+
+    <string name="button_search">Search</string>
+</resources>
