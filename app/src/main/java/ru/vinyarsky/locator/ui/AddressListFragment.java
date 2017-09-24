@@ -34,7 +34,7 @@ public final class AddressListFragment extends Fragment implements AddressListFr
     FloatingActionButton fabView;
 
     private final AddressListFragmentPresenter presenter;
-
+// TODO Write Empty if empty
     private Listener listener;
 
     public AddressListFragment() {
