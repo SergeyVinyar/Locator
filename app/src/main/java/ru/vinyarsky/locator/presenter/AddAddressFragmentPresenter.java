@@ -52,7 +52,8 @@ final public class AddAddressFragmentPresenter extends Presenter {
         super.onStart();
         // TODO No dup code
         List<String> uiList = new ArrayList<>(addressList.size());
-        addressList.forEach(address -> uiList.add(address.getRepresentation()));
+        for (int i = 0; i < addressList.size(); i++)
+            uiList.add(addressList.get(i).getRepresentation());
         view.displayAddressList(uiList);
     }
 
@@ -68,7 +69,7 @@ final public class AddAddressFragmentPresenter extends Presenter {
 
     public void searchButtonClick() {
         showProgress();
-        if (!"".equals(searchString)) {
+        if (searchString != null && !"".equals(searchString)) {
             autoDispose(
                     netRepository.getAddressList(searchString)
                             .subscribeOn(Schedulers.io())
@@ -78,7 +79,9 @@ final public class AddAddressFragmentPresenter extends Presenter {
                                 try {
                                     addressList = netList;
                                     List<String> uiList = new ArrayList<>(netList.size());
-                                    netList.forEach(address -> uiList.add(address.getRepresentation()));
+                                    for (int i = 0; i < netList.size(); i++) {
+                                        uiList.add(netList.get(i).getRepresentation());
+                                    }
                                     view.displayAddressList(uiList);
                                 }
                                 finally {
@@ -98,11 +101,17 @@ final public class AddAddressFragmentPresenter extends Presenter {
     }
 
     public void addressClick(String addressRepresentation) {
-        Optional<NetAddress> netAddressOpt = addressList.stream().filter(address -> addressRepresentation.equals(address.getRepresentation())).findAny();
-        if (netAddressOpt.isPresent()) {
+        NetAddress address = null;
+        for (int i = 0; i < addressList.size(); i++) {
+            if (addressRepresentation.equals(addressList.get(i).getRepresentation())) {
+                address = addressList.get(i);
+                break;
+            }
+        }
+        if (address != null) {
             showProgress();
             autoDispose(
-                    Observable.just(netAddressOpt.get())
+                    Observable.just(address)
                             .observeOn(Schedulers.io())
                             .flatMap(netAddress -> dbRepository.saveAddress(new DbAddress(netAddress.getRepresentation(), netAddress.getLatitude(), netAddress.getLongitude())))
                             .observeOn(AndroidSchedulers.mainThread())

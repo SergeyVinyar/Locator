@@ -1,11 +1,16 @@
 package ru.vinyarsky.locator.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,8 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-
-import java.util.function.Supplier;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +30,9 @@ public class MainActivity extends AppCompatActivity
             AddressListFragment.Listener,
             AddAddressFragment.Listener,
             AddressesOnMapFragment.Listener,
-            NavigationView.OnNavigationItemSelectedListener {
+            DistanceListFragment.Listener,
+            NavigationView.OnNavigationItemSelectedListener,
+            ActivityCompat.OnRequestPermissionsResultCallback {
 
     @BindView(R.id.activity_main)
     DrawerLayout mainActivity;
@@ -42,6 +48,8 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.progressbar_layout_main_appbar)
     ProgressBar progressBar;
+
+    private final static int ACCESS_COARSE_LOCATION_REQUEST_PERMISSION_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +101,7 @@ public class MainActivity extends AppCompatActivity
                 showAddressListFragment();
                 break;
             case R.id.menuitem_drawer_distance:
+                showDistanceListFragment();
                 break;
             case R.id.menuitem_drawer_map:
                 showAddressesOnMapFragment();
@@ -125,10 +134,33 @@ public class MainActivity extends AppCompatActivity
         showSingleTopFragment(AddressesOnMapFragment.class, AddressesOnMapFragment::newInstance);
     }
 
+    public void showDistanceListFragment() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, ACCESS_COARSE_LOCATION_REQUEST_PERMISSION_ID);
+        else
+            showSingleTopFragment(DistanceListFragment.class, DistanceListFragment::newInstance);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_COARSE_LOCATION_REQUEST_PERMISSION_ID: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Ok, do it again
+                    showDistanceListFragment();
+                } else {
+                    // Oops
+                    Toast.makeText(this, "No permission - no distance. Sorry, bro.", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
     /**
      * Shows new fragment. If it's already existed show the existed instance.
      */
-    private void showSingleTopFragment(Class fragmentClass, Supplier<Fragment> supplyFragment) {
+    private void showSingleTopFragment(Class fragmentClass, com.annimon.stream.function.Supplier<Fragment> supplyFragment) {
         String fragmentTag = fragmentClass.getName();
 
         int fragmentId = getBackstackEntryIdForFragmentTag(fragmentTag);

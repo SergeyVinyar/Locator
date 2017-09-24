@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 
@@ -13,6 +15,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.reactivex.schedulers.Schedulers;
 import ru.vinyarsky.locator.db.DbRepository;
+import ru.vinyarsky.locator.location.LocationRepository;
 import ru.vinyarsky.locator.net.NetRepository;
 
 @Module
@@ -42,6 +45,18 @@ public final class LocatorModule {
     @Singleton
     public NetRepository getNetRepository() {
         return new NetRepository();
+    }
+
+    @Provides
+    @Singleton
+    public FusedLocationProviderClient getLocationClient(Context context) {
+        return LocationServices.getFusedLocationProviderClient(context);
+    }
+
+    @Provides
+    @Singleton
+    public LocationRepository getLocationRepository(FusedLocationProviderClient locationClient) {
+        return new LocationRepository(locationClient);
     }
 
     private static class SqlHelper extends SQLiteOpenHelper {

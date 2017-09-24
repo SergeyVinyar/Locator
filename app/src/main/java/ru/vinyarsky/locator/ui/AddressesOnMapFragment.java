@@ -70,12 +70,13 @@ public final class AddressesOnMapFragment extends SupportMapFragment
 
     @Override
     public void displayMarkers(List<AddressesOnMapFragmentPresenter.AddressMarker> data) {
-        data.forEach(marker -> {
+        for (int i = 0; i < data.size(); i++) {
+            AddressesOnMapFragmentPresenter.AddressMarker marker = data.get(i);
             MarkerOptions options = new MarkerOptions();
             options.title(marker.getRepresentation());
             options.position(new LatLng(marker.getLatitude(), marker.getLongitude()));
             googleMap.addMarker(options);
-        });
+        }
     }
 
     @Override

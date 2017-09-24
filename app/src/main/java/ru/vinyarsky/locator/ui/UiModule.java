@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import dagger.Module;
 import dagger.Provides;
 import ru.vinyarsky.locator.db.DbRepository;
+import ru.vinyarsky.locator.location.LocationRepository;
 import ru.vinyarsky.locator.net.NetRepository;
 import ru.vinyarsky.locator.presenter.AddAddressFragmentPresenter;
 import ru.vinyarsky.locator.presenter.AddressListFragmentPresenter;
 import ru.vinyarsky.locator.presenter.AddressesOnMapFragmentPresenter;
+import ru.vinyarsky.locator.presenter.DistanceListFragmentPresenter;
 
 @Module
 public final class UiModule {
@@ -41,5 +43,13 @@ public final class UiModule {
         if (!(fragment instanceof AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView))
             throw new IllegalArgumentException(String.format("Fragment '%s' must implement AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView", fragment.getClass().getSimpleName()));
         return new AddressesOnMapFragmentPresenter(dbRepository, netRepository, (AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView) fragment);
+    }
+
+    @Provides
+    @UiScope
+    public DistanceListFragmentPresenter getDistanceListFragmentPresenter(DbRepository dbRepository, NetRepository netRepository, LocationRepository locationRepository) {
+        if (!(fragment instanceof DistanceListFragmentPresenter.DistanceListFragmentView))
+            throw new IllegalArgumentException(String.format("Fragment '%s' must implement DistanceListFragmentPresenter.DistanceListFragmentView", fragment.getClass().getSimpleName()));
+        return new DistanceListFragmentPresenter(dbRepository, netRepository, locationRepository, (DistanceListFragmentPresenter.DistanceListFragmentView) fragment);
     }
 }

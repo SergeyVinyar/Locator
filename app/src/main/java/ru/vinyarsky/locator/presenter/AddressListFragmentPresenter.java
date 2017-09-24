@@ -45,7 +45,8 @@ final public class AddressListFragmentPresenter extends Presenter {
                             // .subscribeOn(Schedulers.io()) has no effect (see BriteDatabase.createQuery docs)
                             .map(addressList -> {
                                 ArrayList<String> result = new ArrayList<>(addressList.size());
-                                addressList.forEach(address -> result.add(address.getRepresentation()));
+                                for (int i = 0; i < addressList.size(); i++)
+                                    result.add(addressList.get(i).getRepresentation());
                                 return result;
                             })
                             .observeOn(AndroidSchedulers.mainThread())
