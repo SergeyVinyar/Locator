@@ -26,7 +26,7 @@ public final class UiModule {
     public AddressListFragmentPresenter getAddressListFragmentPresenter(DbRepository dbRepository, NetRepository netRepository) {
         if (!(fragment instanceof AddressListFragmentPresenter.AddressListFragmentView))
             throw new IllegalArgumentException(String.format("Fragment '%s' must implement AddressListFragmentPresenter.AddressListFragmentView", fragment.getClass().getSimpleName()));
-        return new AddressListFragmentPresenter(dbRepository, netRepository, (AddressListFragmentPresenter.AddressListFragmentView) fragment);
+        return new AddressListFragmentPresenter(dbRepository, (AddressListFragmentPresenter.AddressListFragmentView) fragment);
     }
 
     @Provides
@@ -42,7 +42,7 @@ public final class UiModule {
     public AddressesOnMapFragmentPresenter getAddressesOnMapFragmentPresenter(DbRepository dbRepository, NetRepository netRepository) {
         if (!(fragment instanceof AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView))
             throw new IllegalArgumentException(String.format("Fragment '%s' must implement AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView", fragment.getClass().getSimpleName()));
-        return new AddressesOnMapFragmentPresenter(dbRepository, netRepository, (AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView) fragment);
+        return new AddressesOnMapFragmentPresenter(dbRepository, (AddressesOnMapFragmentPresenter.AddressesOnMapFragmentView) fragment);
     }
 
     @Provides
@@ -50,6 +50,6 @@ public final class UiModule {
     public DistanceListFragmentPresenter getDistanceListFragmentPresenter(DbRepository dbRepository, NetRepository netRepository, LocationRepository locationRepository) {
         if (!(fragment instanceof DistanceListFragmentPresenter.DistanceListFragmentView))
             throw new IllegalArgumentException(String.format("Fragment '%s' must implement DistanceListFragmentPresenter.DistanceListFragmentView", fragment.getClass().getSimpleName()));
-        return new DistanceListFragmentPresenter(dbRepository, netRepository, locationRepository, (DistanceListFragmentPresenter.DistanceListFragmentView) fragment);
+        return new DistanceListFragmentPresenter(dbRepository, locationRepository, (DistanceListFragmentPresenter.DistanceListFragmentView) fragment);
     }
 }

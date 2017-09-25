@@ -19,11 +19,15 @@ final public class AddAddressFragmentPresenter extends Presenter {
 
     private final AddAddressFragmentView view;
 
+    private final DbRepository dbRepository;
+    private final NetRepository netRepository;
+
     private String searchString;
     private ArrayList<NetAddress> addressList = new ArrayList<>();
 
     public AddAddressFragmentPresenter(DbRepository dbRepository, NetRepository netRepository, AddAddressFragmentView view) {
-        super(dbRepository, netRepository);
+        this.dbRepository = dbRepository;
+        this.netRepository = netRepository;
         this.view = view;
     }
 

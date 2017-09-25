@@ -15,12 +15,14 @@ final public class AddressListFragmentPresenter extends Presenter {
 
     private final String BUNDLE_DATA = "address_list_fragment_presenter_data";
 
+    private final DbRepository dbRepository;
+
     private final AddressListFragmentView view;
 
     private ArrayList<String> addressList = new ArrayList<>();
 
-    public AddressListFragmentPresenter(DbRepository dbRepository, NetRepository netRepository, AddressListFragmentView view) {
-        super(dbRepository, netRepository);
+    public AddressListFragmentPresenter(DbRepository dbRepository, AddressListFragmentView view) {
+        this.dbRepository = dbRepository;
         this.view = view;
     }
 

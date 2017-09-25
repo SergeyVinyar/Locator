@@ -17,15 +17,7 @@ abstract class Presenter {
 
     private Boolean running = false;
 
-    protected final DbRepository dbRepository;
-    protected final NetRepository netRepository;
-
     protected abstract View getView();
-
-    public Presenter(DbRepository dbRepository, NetRepository netRepository) {
-        this.dbRepository = dbRepository;
-        this.netRepository = netRepository;
-    }
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         progressVisible = savedInstanceState != null && savedInstanceState.getBoolean(BUNDLE_PROGRESS_VISIBLE, false);

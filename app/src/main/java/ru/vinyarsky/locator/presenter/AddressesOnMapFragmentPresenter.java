@@ -18,14 +18,16 @@ public final class AddressesOnMapFragmentPresenter extends Presenter {
 
     private final String BUNDLE_DATA = "addresses_on_map_fragment_presenter_data";
 
+    private final DbRepository dbRepository;
+
     private final AddressesOnMapFragmentView view;
 
     private ArrayList<AddressMarker> markersList = new ArrayList<>();
 
     private boolean isMapReady = false;
 
-    public AddressesOnMapFragmentPresenter(DbRepository dbRepository, NetRepository netRepository, AddressesOnMapFragmentView view) {
-        super(dbRepository, netRepository);
+    public AddressesOnMapFragmentPresenter(DbRepository dbRepository, AddressesOnMapFragmentView view) {
+        this.dbRepository = dbRepository;
         this.view = view;
     }
 

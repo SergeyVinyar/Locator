@@ -22,13 +22,15 @@ public final class DistanceListFragmentPresenter extends Presenter {
 
     private final String BUNDLE_DATA = "distance_list_fragment_presenter_data";
 
+    private final DbRepository dbRepository;
     private final LocationRepository locationRepository;
+
     private final DistanceListFragmentView view;
 
     private ArrayList<DistanceItem> distanceList = new ArrayList<>();
 
-    public DistanceListFragmentPresenter(DbRepository dbRepository, NetRepository netRepository, LocationRepository locationRepository, DistanceListFragmentView view) {
-        super(dbRepository, netRepository);
+    public DistanceListFragmentPresenter(DbRepository dbRepository, LocationRepository locationRepository, DistanceListFragmentView view) {
+        this.dbRepository = dbRepository;
         this.locationRepository = locationRepository;
         this.view = view;
     }
